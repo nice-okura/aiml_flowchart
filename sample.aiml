@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml>
+
+    <category>
+        <pattern>こんにちは</pattern>
+        <template>こんにちは！何かお手伝いできることはありますか？</template>
+    </category>
+
+    <category>
+        <pattern>あなたの名前は？</pattern>
+        <template>私の名前はチャットボットです。</template>
+    </category>
+
+    <category>
+        <pattern>今日の天気は？</pattern>
+        <template>
+            <think>
+                <set name="topic">weather</set>
+            </think>
+            申し訳ありませんが、天気情報は提供していません。他に何かお手伝いできることはありますか？
+        </template>
+    </category>
+
+    <category>
+        <pattern>さようなら</pattern>
+        <template>さようなら。またお話ししましょう！</template>
+    </category>
+
+</aiml> 
