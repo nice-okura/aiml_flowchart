@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>AIMLフローチャート表示</title>
     <style>
-        /* スタイルはここに追加 */
-        #drop-zone {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-        }
+      html,
+      body {
+        height: 100%; /* Full height of the viewport */
+        margin: 0;
+        padding: 0;
+      }
+      #drop-zone {
+        border: 2px dashed #ccc;
+        background-color: #ffbce9;
+        padding: 20px;
+        text-align: center;
+      }
+      .flowchart-box {
+        border: 2px solid #ff8080; /* Light red border */
+        background-color: #fff0f0; /* Very light red background */
+        padding: 10px;
+        margin: 10px;
+        text-align: center;
+        overflow: hidden;
+        position: absolute;
+        border-radius: 5px; /* Rounded corners for boxes */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+      }
+      #flowchart-container {
+        position: relative;
+        width: 100%; /* Full width */
+        min-height: 100vh; /* Minimum full height of the viewport */
+        background-color: #ffe0e0; /* Light red background for the flowchart area */
+      }
+      .jsplumb-connector {
+        stroke: #ff6666; /* Light red color for connectors */
+        stroke-width: 2px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="drop-zone">ここにAIMLファイルをドロップ</div>
     <div id="flowchart-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/jsplumb@2.15.6/dist/js/jsplumb.min.js"></script>
-    <script>
-        // JavaScriptコードはここに追加
-    </script>
-</body>
+    <script src="./script.js"></script>
+  </body>
 </html>
