@@ -32,4 +32,19 @@
         <template>別の質問をしてください</template>
     </category>
 
+    <category>
+        <pattern></pattern>
+        <template>
+            <condition name"id">
+                <li value="10" id="11">
+                    <think>
+                        <predstore>command=</predstore>
+                        
+                    </think>
+                    メッセージ
+                    <command><predstore>json</predstore></command>
+                </li>
+            </condition>
+        </template>
+    </category>
 </aiml>
