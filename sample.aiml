@@ -18,24 +18,14 @@
     </category>
 
     <category>
-        <pattern>おすすめの旅行先は？</pattern>
-        <template>京都です</template>
-    </category>
-
-    <category>
-        <pattern>今はやりのスポーツは？</pattern>
-        <template>野球です</template>
-    </category>
-
-    <category>
         <pattern>*</pattern>
         <template>別の質問をしてください</template>
     </category>
 
     <category>
-        <pattern></pattern>
+        <pattern>#YES</pattern>
         <template>
-            <condition name"id">
+            <condition name="id">
                 <li value="10" id="11">
                     <think>
                         <predstore>command=</predstore>
