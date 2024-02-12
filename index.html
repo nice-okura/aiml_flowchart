@@ -2,47 +2,18 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>AIMLフローチャート表示</title>
-    <style>
-      html,
-      body {
-        height: 100%; /* Full height of the viewport */
-        margin: 0;
-        padding: 0;
-      }
-      #drop-zone {
-        border: 2px dashed #ccc;
-        background-color: #f75151;
-        padding: 20px;
-        text-align: center;
-      }
-      .flowchart-box {
-        border: 2px solid #c90f0fe5; /* Light red border */
-        background-color: #ffffff; /* Very light red background */
-        padding: 10px;
-        margin: 10px;
-        text-align: center;
-        overflow: hidden;
-        position: absolute;
-        border-radius: 5px; /* Rounded corners for boxes */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-      }
-      #flowchart-container {
-        position: relative;
-        width: 100%; /* Full width */
-        min-height: 100vh; /* Minimum full height of the viewport */
-        background-color: #ffffff; /* Light red background for the flowchart area */
-      }
-      .jsplumb-connector {
-        stroke: #ac1414; /* Light red color for connectors */
-        stroke-width: 2px;
-      }
-    </style>
+    <title>AIML to PlantUML Converter</title>
+    <script src="https://cdn.jsdelivr.net/npm/pako@1.0.11/dist/pako.min.js"></script>
+    <script src="./rawdeflate.js"></script>
   </head>
   <body>
-    <div id="flowchart-container"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/jsplumb/dist/js/jsplumb.min.js"></script>
-    <script src="./script.js"></script>
+    <div
+      id="drop_area"
+      style="width: 500px; height: 300px; border: 2px dashed #ccc"
+    >
+      <p>ここにAIMLファイルをドラッグ＆ドロップしてください。</p>
+    </div>
+    <img id="umlImage" src="" alt="PlantUML Diagram" style="max-width: 100%" />
+    <script src="script.js"></script>
   </body>
 </html>
