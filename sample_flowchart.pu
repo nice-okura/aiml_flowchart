@@ -1,4 +1,4 @@
-@startuml
+@startuml flowchart
 title sample AIML flowchart
 start
 switch (発話内容)
@@ -12,9 +12,17 @@ case (今日の天気は？)
     :晴れです;
   case (その他)
     :曇りです;
-   endswitch
+  endswitch
+
+case (#YES)
+  switch (id)
+  case (10)
+    :[id -> 11];
+    :メッセージ;
+  endswitch
 case (*)
   :別の質問をしてください;
+
 endswitch 
 stop
 @enduml
