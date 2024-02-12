@@ -1,0 +1,20 @@
+@startuml
+title sample AIML flowchart
+start
+switch (発話内容)
+case (こんにちは)   
+  :こんにちは、知りたい内容を発話してください。;
+case (今日の天気は？)
+  switch (weather)
+  case (rain)
+    :雨です;
+  case (sunny)
+    :晴れです;
+  case (その他)
+    :曇りです;
+   endswitch
+case (*)
+  :別の質問をしてください;
+endswitch 
+stop
+@enduml
