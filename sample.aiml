@@ -35,6 +35,16 @@
                     メッセージ
                     <command><predstore>json</predstore></command>
                 </li>
+                <li value="12" id="13">
+                    <think>
+                        <predstore>command=</predstore>
+                    </think>
+                    12から13になります
+                    <command><predstore>json</predstore></command>
+                </li>
+                <li>
+                    その他の条件です
+                </li>
             </condition>
         </template>
     </category>

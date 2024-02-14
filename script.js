@@ -117,19 +117,25 @@ function convertAimlToPlantUml(aimlContent) {
 
     // template内のテキストまたはconditionを解析
     if (template.getElementsByTagName("condition").length > 0) {
-      plantUml += `  switch (${conditionName})\n`;
-      
       var condition = template.getElementsByTagName("condition")[0];
       var conditionName = condition.getAttribute("name");
       var lis = condition.getElementsByTagName("li");
+      
+      plantUml += `  switch (${conditionName})\n`;
 
       for (var j = 0; j < lis.length; j++) {
         var value = lis[j].getAttribute("value") || "その他";
+        var additionalAttribute = Array.from(lis[j].attributes).filter(attr => attr.name !== 'value')[0];
         var liText = Array.from(lis[j].childNodes)
           .filter((node) => node.nodeType === Node.TEXT_NODE)
           .map((node) => node.nodeValue.trim())
           .join("");
         plantUml += `  case (${value})\n    :${liText};\n`;
+
+        // 追加の属性がある場合、それをPlantUMLに追加
+        if (additionalAttribute) {
+          plantUml += `    :[${additionalAttribute.name} = ${additionalAttribute.value}];\n`;
+        }
       }
       plantUml += "  endswitch\n";
     } else {
