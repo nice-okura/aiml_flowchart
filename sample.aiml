@@ -42,6 +42,9 @@
                     12から13になります
                     <command><predstore>json</predstore></command>
                 </li>
+                <li regex="100">
+                    正規表現
+                </li>
                 <li>
                     その他の条件です
                 </li>

@@ -4,7 +4,7 @@
 
 - Javaをインストールしておく
 - PlantUMLのjarファイルをダウンロードしておく
-[[https://plantuml.com/ja/download]]
+https://plantuml.com/ja/download
 
 ## 手順
 
@@ -20,5 +20,6 @@
 1. puファイルと同フォルダにフローチャート（.png）が生成されている
 
 ## 補足
+
 jarファイル実行時はいろいろオプションがある。以下参照。
-[[https://plantuml.com/ja-dark/command-line]]
+https://plantuml.com/ja-dark/command-line
