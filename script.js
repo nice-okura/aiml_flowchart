@@ -1,8 +1,15 @@
-document.getElementById("drop_area").addEventListener("dragover", function (e) {
+const dropArea = document.getElementById("drop_area");
+
+dropArea.addEventListener("dragover", function (e) {
   e.preventDefault();
+  this.classList.add("dragover");
 });
 
-document.getElementById("drop_area").addEventListener("drop", function (e) {
+dropArea.addEventListener("dragleave", function (e) {
+  this.classList.remove("dragover");
+});
+
+dropArea.addEventListener("drop", function (e) {
   e.preventDefault();
   var files = e.dataTransfer.files;
   if (files.length > 0) {
@@ -70,6 +77,22 @@ function encode6bit(b) {
   return "?";
 }
 
+function encodeToUtf8(plantUmlCode) {
+  const encoder = new TextEncoder();
+  const utf8Encoded = encoder.encode(plantUmlCode);
+  return utf8Encoded;
+}
+
+function stringUtf8ToHex(str) {
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(str);
+  let hexString = "";
+  encoded.forEach((byte) => {
+    hexString += byte.toString(16).padStart(2, "0");
+  });
+  return hexString;
+}
+
 function convertAimlToPlantUml(aimlContent) {
   // XMLパーサーを初期化
   var parser = new DOMParser();
@@ -83,25 +106,23 @@ function convertAimlToPlantUml(aimlContent) {
   // 各categoryタグを解析
   var categories = xmlDoc.getElementsByTagName("category");
   for (var i = 0; i < categories.length; i++) {
-    var pattern = categories[i].getElementsByTagName("pattern")[0].textContent;
+    var patterns = categories[i].getElementsByTagName("pattern");
     var template = categories[i].getElementsByTagName("template")[0];
 
-    // 条件分岐のケースを追加
-    if (pattern === "*") {
-      plantUml += "case (*)\n";
-    } else if (pattern === "#YES") {
-      // 特殊なケースの処理
-      plantUml += "case (#YES)\n";
-    } else {
-      plantUml += `case (${pattern})\n`;
+    let patternsText = [];
+    for (var j = 0; j < patterns.length; j++) {
+      patternsText.push(patterns[j].textContent)
     }
+    plantUml += `case (${patternsText.join(' or ')})\n`;
 
     // template内のテキストまたはconditionを解析
     if (template.getElementsByTagName("condition").length > 0) {
+      plantUml += `  switch (${conditionName})\n`;
+      
       var condition = template.getElementsByTagName("condition")[0];
       var conditionName = condition.getAttribute("name");
-      plantUml += `  switch (${conditionName})\n`;
       var lis = condition.getElementsByTagName("li");
+
       for (var j = 0; j < lis.length; j++) {
         var value = lis[j].getAttribute("value") || "その他";
         var liText = Array.from(lis[j].childNodes)
@@ -124,14 +145,38 @@ function convertAimlToPlantUml(aimlContent) {
 
   return plantUml;
 }
-function encodeToUtf8(plantUmlCode) {
-  const encoder = new TextEncoder();
-  const utf8Encoded = encoder.encode(plantUmlCode);
-  return utf8Encoded;
+function download(filename, text) {
+  // Blobオブジェクトを作成し、内容にテキストデータをセットする
+  var blob = new Blob([text], {type: 'text/plain'});
+
+  // Blobオブジェクトを指すURLを作成する
+  var url = window.URL.createObjectURL(blob);
+
+  // a要素を作成する
+  var downloadLink = document.createElement('a');
+  downloadLink.href = url;
+  downloadLink.download = filename;
+
+  // a要素をクリックしてダウンロードを実行する
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+
+  // ダウンロード後は不要になったURLと要素をクリーンアップする
+  document.body.removeChild(downloadLink);
+  window.URL.revokeObjectURL(url);
 }
+
 function displayPlantUml(plantUmlCode) {
-  // const s = encodeToUtf8(plantUmlCode);
-  const encoded = encode64(deflate(plantUmlCode, 9));
-  const diagramUrl = `http://localhost:8080/plantuml/png/${encoded}`;
-  document.getElementById("umlImage").src = diagramUrl;
+  // Deflate関数を使う場合
+  // const encoded = encode64(deflate(plantUmlCode, 9));
+  // const diagramUrl = `http://localhost:8080/plantuml/png/${encoded}`;
+
+  // hexを使う場合
+  // const encoded = stringUtf8ToHex(plantUmlCode);
+  // const diagramUrl = `http://localhost:8080/plantuml/png/~h${encoded}`;
+  // console.log(diagramUrl);
+  // document.getElementById("umlImage").src = diagramUrl;
+
+  // 外部ファイルに保存する場合
+  download('flowchart.pu', plantUmlCode);
 }
