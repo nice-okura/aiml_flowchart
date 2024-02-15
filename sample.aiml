@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aiml version="2.0" xmlns="http://www.sunaba.docomo.ne.jp/xaiml/">
 
+    <topic name="_">
+        <category>
+            <pattern>_</pattern>
+            <template>
+                <condition name="input">
+                    <li>
+                        <think>
+                            <set name="_hoge">
+                                <sraix botid="xxx">
+                                    <get name="input"/>
+                                </sraix>
+                            </set>
+                        </think>
+                        <condition name="_fuga">
+                            <li value="YES">
+                                <set name="yyy">
+                                    <srai>#YES</srai>
+                                </set>
+                            </li>
+                            <li value="NO">
+                                <set name="yyy">
+                                    <srai>#NO</srai>
+                                </set>
+                            </li>
+                            <li>
+                                <set name="yyy">どこにもマッチしていません</set>
+                            </li>
+                        </condition>
+                    </li>
+                </condition>
+            </template>
+        </category>
+    </topic>
+
     <category>
         <pattern>こんにちは</pattern>
         <template>こんにちは、知りたい内容を発話してください。</template>
@@ -30,17 +64,17 @@
                 <li value="10" id="11">
                     <think>
                         <predstore>command=</predstore>
-                        
-                    </think>
-                    メッセージ
-                    <command><predstore>json</predstore></command>
+
+                    </think> メッセージ <command>
+                        <predstore>json</predstore>
+                    </command>
                 </li>
                 <li value="12" id="13">
                     <think>
                         <predstore>command=</predstore>
-                    </think>
-                    12から13になります
-                    <command><predstore>json</predstore></command>
+                    </think> 12から13になります <command>
+                        <predstore>json</predstore>
+                    </command>
                 </li>
                 <li regex="100">
                     正規表現
@@ -49,6 +83,17 @@
                     その他の条件です
                 </li>
             </condition>
+        </template>
+    </category>
+    <category>
+        <pattern>#RELEARN</pattern>
+        <template>
+            <think>
+                <predstore>aaa</predstore>
+                <predstore>bbb</predstore>
+            </think>
+            ここだけ表示させたい
+            <command><predstore>xxx</predstore></command>
         </template>
     </category>
 </aiml>
