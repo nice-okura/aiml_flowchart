@@ -117,14 +117,21 @@ function convertAimlToPlantUml(aimlContent) {
     for (var j = 0; j < lis.length; j++) {
       var value = lis[j].getAttribute("value") || "その他";
       var liText = "";
-      
+      var additionalAttribute = Array.from(lis[j].attributes).filter(attr => attr.name !== 'value')[0];
+
+
+
       lisChilenodes = lis[j].childNodes;
       Array.from(lisChilenodes).forEach((node) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          liText = node.nodeValue.trim();
+          liText += node.nodeValue.trim();
         }
       });
       conditionOutput += `${indent}case (${value})\n`;
+      // 追加の属性がある場合、それをPlantUMLに追加
+      if (additionalAttribute) {
+        conditionOutput += `${indent}  :${additionalAttribute.name} = ${additionalAttribute.value};\n`;
+      }
       if (liText != "") {
         conditionOutput += `${indent}  :${liText};\n`;
       }
@@ -133,13 +140,7 @@ function convertAimlToPlantUml(aimlContent) {
       var nestedCondition = lis[j].getElementsByTagName("condition")[0];
       if (nestedCondition) {
         conditionOutput += processCondition(nestedCondition, depth + 1); // 再帰呼び出し
-      } //else if (liText) {
-      //   conditionOutput += `${indent}  :${liText};\n`;
-      // }
-
-
-
-
+      }
     }
 
     conditionOutput += `${indent}endswitch\n`;
