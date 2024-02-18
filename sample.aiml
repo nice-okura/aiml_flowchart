@@ -6,6 +6,10 @@
             <pattern>_</pattern>
             <template>
                 <condition name="input">
+                    <li value="sample">
+                        サンプル
+                    </li>
+
                     <li>
                         <think>
                             <set name="_hoge">
@@ -19,6 +23,7 @@
                                 <set name="yyy">
                                     <srai>#YES</srai>
                                 </set>
+                                ためしにYES
                             </li>
                             <li value="NO">
                                 <set name="yyy">

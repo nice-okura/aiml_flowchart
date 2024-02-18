@@ -94,16 +94,58 @@ function stringUtf8ToHex(str) {
 }
 
 function convertAimlToPlantUml(aimlContent) {
-  // XMLパーサーを初期化
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(aimlContent, "text/xml");
 
-  var plantUml = "@startuml flowchart\n";
+  var plantUml = "@startuml\n";
   plantUml += "title sample AIML flowchart\n";
   plantUml += "start\n";
   plantUml += "switch (発話内容)\n";
 
-  // 各categoryタグを解析
+  // 条件を処理するための関数
+  function processCondition(condition, depth) {
+    var conditionOutput = "";
+    var conditionName = condition.getAttribute("name");
+    var indent = "  ".repeat(depth);
+
+    conditionOutput += `${indent}switch (${conditionName})\n`;
+
+    // 直下のliタグのみを処理する
+    var lis = Array.from(condition.children).filter(
+      (child) => child.tagName === "li"
+    );
+    for (var j = 0; j < lis.length; j++) {
+      var value = lis[j].getAttribute("value") || "その他";
+      var liText = "";
+      
+      lisChilenodes = lis[j].childNodes;
+      Array.from(lisChilenodes).forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          liText = node.nodeValue.trim();
+        }
+      });
+      conditionOutput += `${indent}case (${value})\n`;
+      if (liText != "") {
+        conditionOutput += `${indent}  :${liText};\n`;
+      }
+
+      // ネストされたconditionタグをチェック
+      var nestedCondition = lis[j].getElementsByTagName("condition")[0];
+      if (nestedCondition) {
+        conditionOutput += processCondition(nestedCondition, depth + 1); // 再帰呼び出し
+      } //else if (liText) {
+      //   conditionOutput += `${indent}  :${liText};\n`;
+      // }
+
+
+
+
+    }
+
+    conditionOutput += `${indent}endswitch\n`;
+    return conditionOutput;
+  }
+
   var categories = xmlDoc.getElementsByTagName("category");
   for (var i = 0; i < categories.length; i++) {
     var patterns = categories[i].getElementsByTagName("pattern");
@@ -111,33 +153,13 @@ function convertAimlToPlantUml(aimlContent) {
 
     let patternsText = [];
     for (var j = 0; j < patterns.length; j++) {
-      patternsText.push(patterns[j].textContent)
+      patternsText.push(patterns[j].textContent);
     }
-    plantUml += `case (${patternsText.join(' or ')})\n`;
+    plantUml += `case (${patternsText.join(" or ")})\n`;
 
-    // template内のテキストまたはconditionを解析
-    if (template.getElementsByTagName("condition").length > 0) {
-      var condition = template.getElementsByTagName("condition")[0];
-      var conditionName = condition.getAttribute("name");
-      var lis = condition.getElementsByTagName("li");
-      
-      plantUml += `  switch (${conditionName})\n`;
-
-      for (var j = 0; j < lis.length; j++) {
-        var value = lis[j].getAttribute("value") || "その他";
-        var additionalAttribute = Array.from(lis[j].attributes).filter(attr => attr.name !== 'value')[0];
-        var liText = Array.from(lis[j].childNodes)
-          .filter((node) => node.nodeType === Node.TEXT_NODE)
-          .map((node) => node.nodeValue.trim())
-          .join("");
-        plantUml += `  case (${value})\n    :${liText};\n`;
-
-        // 追加の属性がある場合、それをPlantUMLに追加
-        if (additionalAttribute) {
-          plantUml += `    :[${additionalAttribute.name} = ${additionalAttribute.value}];\n`;
-        }
-      }
-      plantUml += "  endswitch\n";
+    var condition = template.getElementsByTagName("condition")[0];
+    if (condition) {
+      plantUml += processCondition(condition, 1);
     } else {
       // 単純なテンプレートのテキスト
       var textContent = template.textContent.trim();
@@ -151,15 +173,16 @@ function convertAimlToPlantUml(aimlContent) {
 
   return plantUml;
 }
+
 function download(filename, text) {
   // Blobオブジェクトを作成し、内容にテキストデータをセットする
-  var blob = new Blob([text], {type: 'text/plain'});
+  var blob = new Blob([text], { type: "text/plain" });
 
   // Blobオブジェクトを指すURLを作成する
   var url = window.URL.createObjectURL(blob);
 
   // a要素を作成する
-  var downloadLink = document.createElement('a');
+  var downloadLink = document.createElement("a");
   downloadLink.href = url;
   downloadLink.download = filename;
 
@@ -184,5 +207,5 @@ function displayPlantUml(plantUmlCode) {
   // document.getElementById("umlImage").src = diagramUrl;
 
   // 外部ファイルに保存する場合
-  download('flowchart.pu', plantUmlCode);
+  download("flowchart.pu", plantUmlCode);
 }
