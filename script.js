@@ -115,11 +115,15 @@ function convertAimlToPlantUml(aimlContent) {
       (child) => child.tagName === "li"
     );
     for (var j = 0; j < lis.length; j++) {
-      var value = lis[j].getAttribute("value") || "その他";
+      var value = lis[j].getAttribute("value");
+      var regex = lis[j].getAttribute("regex");
+      var caseValue = value ? value : regex ? `regex=${regex}` : "その他";
       var liText = "";
-      var additionalAttribute = Array.from(lis[j].attributes).filter(attr => attr.name !== 'value')[0];
 
-
+      // valueとregex以外の追加の属性値
+      var additionalAttribute = Array.from(lis[j].attributes).filter(
+        (attr) => attr.name !== "value" && attr.name !== "regex"
+      )[0];
 
       lisChilenodes = lis[j].childNodes;
       Array.from(lisChilenodes).forEach((node) => {
@@ -127,7 +131,7 @@ function convertAimlToPlantUml(aimlContent) {
           liText += node.nodeValue.trim();
         }
       });
-      conditionOutput += `${indent}case (${value})\n`;
+      conditionOutput += `${indent}case (${caseValue})\n`;
       // 追加の属性がある場合、それをPlantUMLに追加
       if (additionalAttribute) {
         conditionOutput += `${indent}  :${additionalAttribute.name} = ${additionalAttribute.value};\n`;
@@ -163,7 +167,21 @@ function convertAimlToPlantUml(aimlContent) {
       plantUml += processCondition(condition, 1);
     } else {
       // 単純なテンプレートのテキスト
-      var textContent = template.textContent.trim();
+      var textContent = Array.from(template.childNodes)
+        .filter(
+          (node) =>
+            node.nodeType === Node.TEXT_NODE ||
+            (node.nodeType === Node.ELEMENT_NODE &&
+              node.tagName !== "think" &&
+              node.tagName !== "command")
+        )
+        .map((node) =>
+          node.nodeType === Node.ELEMENT_NODE
+            ? node.textContent.trim()
+            : node.nodeValue.trim()
+        )
+        .join("");
+
       plantUml += `  :${textContent};\n`;
     }
   }
